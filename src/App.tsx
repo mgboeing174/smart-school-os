@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import "./App.css";
 
-type Page = "home" | "pricing" | "details" | "register" | "login";
+type Page = "home" | "pricing" | "details" | "signup" | "register" | "login";
 
 const plans = {
   Starter: {
@@ -82,7 +82,7 @@ function App() {
 
   const choosePlan = (plan: string) => {
     setSelectedPlan(plan);
-    go("register");
+    go("signup");
   };
 
 
@@ -106,6 +106,86 @@ function App() {
             <LogIn size={18}/> Sign In
           </button>
           <p className="auth-bottom">Demo login UI — authentication will be connected in Phase 1.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (page === "signup") {
+    return (
+      <div className="auth-page">
+        <div className="signup-card">
+          <button className="back-link" onClick={() => go("pricing")}>
+            ← Back to Pricing
+          </button>
+
+          <div className="brand large">
+            <span>SS</span> Smart School OS
+          </div>
+
+          <div className="selected-plan">
+            Selected plan: <strong>{selectedPlan}</strong>
+          </div>
+
+          <h1>Create your account</h1>
+          <p>
+            Create your SSOS account first. After signup, we'll set up your
+            school workspace.
+          </p>
+
+          <div className="social-auth">
+            <button
+              className="social-button"
+              onClick={() => go("register")}
+            >
+              <span className="social-icon google">G</span>
+              Continue with Google
+            </button>
+
+            <button
+              className="social-button"
+              onClick={() => go("register")}
+            >
+              <span className="social-icon apple">●</span>
+              Continue with Apple
+            </button>
+          </div>
+
+          <div className="auth-divider">
+            <span>or continue with email</span>
+          </div>
+
+          <div className="signup-form">
+            <label>Full Name</label>
+            <input placeholder="Your full name" />
+
+            <label>Email Address</label>
+            <input type="email" placeholder="you@school.com" />
+
+            <label>Password</label>
+            <input type="password" placeholder="Create a strong password" />
+
+            <label>Confirm Password</label>
+            <input type="password" placeholder="Confirm your password" />
+          </div>
+
+          <label className="terms-check">
+            <input type="checkbox" />
+            <span>
+              I agree to the SSOS Terms of Service and Privacy Policy.
+            </span>
+          </label>
+
+          <button
+            className="primary full"
+            onClick={() => go("register")}
+          >
+            Create Account <ArrowRight size={18} />
+          </button>
+
+          <p className="auth-bottom">
+            Your account will be connected to the selected {selectedPlan} plan.
+          </p>
         </div>
       </div>
     );
@@ -237,7 +317,7 @@ function App() {
               <h1>Run your entire school from <span>one system.</span></h1>
               <p className="hero-text">Smart School OS brings school administration, students, teachers, attendance, fees, exams, transport and communication together in one centralized platform.</p>
               <div className="hero-actions">
-                <button className="primary" onClick={() => go("register")}>Get Started <ArrowRight size={18}/></button>
+                <button className="primary" onClick={() => go("pricing")}>Get Started <ArrowRight size={18}/></button>
                 <button className="secondary" onClick={() => go("pricing")}>View Pricing</button>
               </div>
               <div className="trust"><ShieldCheck size={17}/> SaaS-ready architecture • Role-based access • Centralized school data</div>
@@ -311,7 +391,7 @@ function App() {
         <section className="cta-section">
           <div className="container cta">
             <div><div className="eyebrow light">READY TO LEVEL UP YOUR SCHOOL?</div><h2>Build a smarter school operation.</h2><p>Start with one School ID and one centralized system.</p></div>
-            <button className="white-button" onClick={() => go("register")}>Get Started <ArrowRight size={18}/></button>
+            <button className="white-button" onClick={() => go("pricing")}>Get Started <ArrowRight size={18}/></button>
           </div>
         </section>
       </main>
@@ -331,7 +411,7 @@ function Header({go,mobileMenu,setMobileMenu}:{go:(p:Page)=>void,mobileMenu:bool
         <button onClick={() => document.getElementById("how")?.scrollIntoView({behavior:"smooth"})}>How It Works</button>
         <button onClick={() => go("pricing")}>Pricing</button>
         <button className="nav-login" onClick={() => go("login")}>Login</button>
-        <button className="nav-start" onClick={() => go("register")}>Get Started</button>
+        <button className="nav-start" onClick={() => go("pricing")}>Get Started</button>
       </nav>
       <button className="menu-btn" onClick={() => setMobileMenu(!mobileMenu)}>{mobileMenu ? <X/> : <Menu/>}</button>
     </div>
