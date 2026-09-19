@@ -129,7 +129,7 @@ function App() {
             <div><label>State</label><input placeholder="Tamil Nadu" /></div>
             <div><label>District</label><input placeholder="District" /></div>
           </div>
-          <button className="primary full" onClick={() => alert("Registration workflow will be connected to Phase 1 School Setup.")}>
+          <button className="primary full" onClick={() => window.location.href = "/app"}>
             Continue School Setup <ArrowRight size={18}/>
           </button>
           <p className="auth-bottom">School ID will be generated after setup.</p>
