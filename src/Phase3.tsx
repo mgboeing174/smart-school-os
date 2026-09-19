@@ -91,7 +91,7 @@ export default function Phase3(){
     {module==="Student Attendance"&&<AttendanceTable rows={filtered} selected={selected} toggle={toggle} type="student" saved={saved}/>}
     {module==="Teacher Attendance"&&<AttendanceTable rows={filtered} selected={selected} toggle={toggle} type="teacher" saved={saved}/>}
     {module==="Fee Structure"&&<FeeTable rows={filtered}/>}
-    {module==="Fee Collection"&&<FeeTable rows={filtered} collection onPay={()=>setShowPay(true)}/>}
+    {module==="Fee Collection"&&<FeeTable rows={filtered} onPay={()=>setShowPay(true)}/>}
     {module==="Pending Fees"&&<FeeTable rows={filtered} pending onPay={()=>setShowPay(true)}/>}
     {module==="Receipts"&&<Receipts onOpen={()=>setShowReceipt(true)}/>}
    </section>
