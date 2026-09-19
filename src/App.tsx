@@ -1,506 +1,232 @@
 import { useState } from "react";
-import "./index.css";
-import SchoolRegistration from "./SchoolRegistration";
+import {
+  ArrowRight, Check, Menu, X, GraduationCap, Users, ClipboardCheck,
+  CreditCard, BookOpen, Bus, BarChart3, ShieldCheck, Sparkles
+} from "lucide-react";
 
-const modules = [
-  {
-    icon: "🎓",
-    title: "Academic Management",
-    description:
-      "Manage academic years, classes, sections, subjects, and teacher assignments from one place.",
-  },
-  {
-    icon: "👨‍🎓",
-    title: "Student Management",
-    description:
-      "Maintain complete student profiles, parents, documents, academic information, and history.",
-  },
-  {
-    icon: "📋",
-    title: "Attendance",
-    description:
-      "Record and monitor student and teacher attendance with clear daily insights.",
-  },
-  {
-    icon: "💳",
-    title: "Fee Management",
-    description:
-      "Configure fee structures, collect payments, generate receipts, and track pending fees.",
-  },
-  {
-    icon: "📝",
-    title: "Examination",
-    description:
-      "Create exams, enter marks, calculate results, and generate student result cards.",
-  },
-  {
-    icon: "🚌",
-    title: "Transport",
-    description:
-      "Manage buses, drivers, routes, stops, and student transport assignments.",
-  },
-  {
-    icon: "📢",
-    title: "Communication",
-    description:
-      "Keep your school community informed with centralized announcements and notifications.",
-  },
-  {
-    icon: "📊",
-    title: "Reports & Insights",
-    description:
-      "Access student, attendance, fee, examination, and operational reports.",
-  },
-];
+export default function App() {
+  const [menu, setMenu] = useState(false);
+  const [pricing, setPricing] = useState(false);
 
-const roles = [
-  {
-    icon: "👨‍💼",
-    title: "Administrators",
-    text: "Control the complete school operation from a centralized platform.",
-  },
-  {
-    icon: "👩‍🏫",
-    title: "Teachers",
-    text: "Manage assigned students, attendance, marks, and academic activities.",
-  },
-  {
-    icon: "🧑‍💻",
-    title: "Staff",
-    text: "Work efficiently with the modules and responsibilities assigned to them.",
-  },
-  {
-    icon: "👨‍👩‍👧",
-    title: "Parents",
-    text: "Connect with important student and school information through future parent access.",
-  },
-];
+  const goPricing = () => {
+    setPricing(true);
+    setMenu(false);
+    setTimeout(() => document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth" }), 50);
+  };
 
-function App() {
-    const [showRegistration, setShowRegistration] = useState(false);
+  if (pricing) {
+    return (
+      <div className="site">
+        <header className="nav">
+          <div className="wrap navin">
+            <button className="brand" onClick={() => setPricing(false)}>
+              <span className="logo"><GraduationCap size={21}/></span>
+              Smart School <b>OS</b>
+            </button>
+            <button className="primary" onClick={() => setPricing(false)}>Back Home</button>
+          </div>
+        </header>
 
-  if (showRegistration) {
-    return <SchoolRegistration />;
+        <section className="priceHero">
+          <span className="tag"><Sparkles size={15}/> Simple school pricing</span>
+          <h1>Plans built for <span>every school.</span></h1>
+          <p>Start with the essentials and scale your school operations as you grow.</p>
+        </section>
+
+        <section id="pricing" className="pricing wrap">
+          <PriceCard
+            name="Starter"
+            desc="For small schools getting started"
+            price="₹2,999"
+            features={["Student management","Attendance management","Teacher management","Basic reports","School profile","Academic year"]}
+            action="Start Free Setup"
+          />
+          <PriceCard
+            featured
+            name="Professional"
+            desc="For growing schools"
+            price="₹6,999"
+            features={["Everything in Starter","Fees & receipts","Exams & results","Parent management","Transport management","Announcements","Advanced reports"]}
+            action="Get Started"
+          />
+          <PriceCard
+            name="Enterprise"
+            desc="For larger institutions"
+            price="Custom"
+            features={["Everything in Professional","Multiple school support","Advanced administration","Custom workflows","Priority support","Enterprise controls"]}
+            action="Contact Us"
+          />
+        </section>
+
+        <section className="comparison wrap">
+          <h2>Everything connected in one platform.</h2>
+          <p>One system for the complete school lifecycle.</p>
+          <div className="compareGrid">
+            {["Students","Attendance","Fees","Exams & Results","Teachers & Staff","Transport","Communication","Reports"].map(x =>
+              <div key={x}><Check size={17}/>{x}</div>
+            )}
+          </div>
+        </section>
+
+        <CTA onClick={() => setPricing(false)} />
+        <Footer />
+      </div>
+    );
   }
+
   return (
-    <div className="app">
-      <header className="navbar">
-        <a href="#" className="brand">
-          <span className="brand-mark">S</span>
-          <span>
-            <strong>Smart School</strong>
-            <small>OS</small>
-          </span>
-        </a>
+    <div className="site">
+      <header className="nav">
+        <div className="wrap navin">
+          <button className="brand">
+            <span className="logo"><GraduationCap size={21}/></span>
+            Smart School <b>OS</b>
+          </button>
 
-        <nav className="nav-links">
-          <a href="#features">Features</a>
-          <a href="#modules">Modules</a>
-          <a href="#how-it-works">How It Works</a>
-          <a href="#security">Security</a>
-          <a href="#pricing">Pricing</a>
-        </nav>
+          <nav className={menu ? "navlinks open" : "navlinks"}>
+            <a href="#features" onClick={() => setMenu(false)}>Features</a>
+            <a href="#modules" onClick={() => setMenu(false)}>Modules</a>
+            <button onClick={goPricing}>Pricing</button>
+            <a href="#about" onClick={() => setMenu(false)}>About</a>
+            <a href="#contact" onClick={() => setMenu(false)}>Contact</a>
+          </nav>
 
-        <div className="nav-actions">
-          <button className="login-button">Login</button>
-          <button className="primary-button small">Get Started</button>
+          <div className="navbuttons">
+            <button className="login">Login</button>
+            <button className="primary">Get Started <ArrowRight size={16}/></button>
+          </div>
+
+          <button className="menubtn" onClick={() => setMenu(!menu)}>
+            {menu ? <X/> : <Menu/>}
+          </button>
         </div>
       </header>
 
       <main>
         <section className="hero">
-          <div className="hero-content">
-            <div className="eyebrow">
-              <span className="pulse-dot" />
-              The modern operating system for schools
-            </div>
-
-            <h1>
-              Run Your Entire School.
-              <span> From One Intelligent Platform.</span>
-            </h1>
-
-            <p className="hero-description">
-              Smart School OS is a centralized school management platform
-              designed to bring academics, people, attendance, fees,
-              examinations, transport, communication, and reports together.
-            </p>
-
-            <div className="hero-buttons">
-              <button className="primary-button">
-                Get Started <span>→</span>
-              </button>
-              <button className="secondary-button">
-                Explore Platform <span>↓</span>
-              </button>
-            </div>
-
-            <div className="hero-note">
-              <span>✓</span> Built for modern schools
-              <span>✓</span> Centralized management
-              <span>✓</span> Secure by design
-            </div>
-          </div>
-
-          <div className="hero-visual">
-            <div className="dashboard-window">
-              <div className="window-top">
-                <div className="window-dots">
-                  <i />
-                  <i />
-                  <i />
-                </div>
-                <span>Smart School OS</span>
-                <span className="window-status">● Live</span>
-              </div>
-
-              <div className="mini-dashboard">
-                <aside>
-                  <div className="mini-logo">S</div>
-                  <div className="mini-nav active">⌂</div>
-                  <div className="mini-nav">🎓</div>
-                  <div className="mini-nav">👥</div>
-                  <div className="mini-nav">📋</div>
-                  <div className="mini-nav">💳</div>
-                  <div className="mini-nav">📝</div>
-                </aside>
-
-                <div className="dashboard-main">
-                  <div className="dashboard-heading">
-                    <div>
-                      <small>MONDAY, JUNE 15, 2026</small>
-                      <h3>Good morning, Admin 👋</h3>
-                    </div>
-                    <div className="admin-avatar">A</div>
-                  </div>
-
-                  <div className="stat-grid">
-                    <div className="stat-card">
-                      <span>Students</span>
-                      <strong>1,248</strong>
-                      <small>↑ 8.2%</small>
-                    </div>
-                    <div className="stat-card">
-                      <span>Teachers</span>
-                      <strong>86</strong>
-                      <small>↑ 4.1%</small>
-                    </div>
-                    <div className="stat-card">
-                      <span>Attendance</span>
-                      <strong>94.6%</strong>
-                      <small>Today</small>
-                    </div>
-                    <div className="stat-card">
-                      <span>Fee Collection</span>
-                      <strong>₹4.8L</strong>
-                      <small>This month</small>
-                    </div>
-                  </div>
-
-                  <div className="chart-area">
-                    <div className="chart-header">
-                      <strong>Student Attendance</strong>
-                      <span>Last 7 days</span>
-                    </div>
-                    <div className="chart">
-                      <div className="bar h1" />
-                      <div className="bar h2" />
-                      <div className="bar h3" />
-                      <div className="bar h4" />
-                      <div className="bar h5" />
-                      <div className="bar h6" />
-                      <div className="bar h7" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="floating-card attendance-card">
-              <span className="floating-icon">✓</span>
-              <div>
-                <strong>94.6%</strong>
-                <small>Today's Attendance</small>
-              </div>
-            </div>
-
-            <div className="floating-card fee-card">
-              <span className="floating-icon">₹</span>
-              <div>
-                <strong>₹4.8L</strong>
-                <small>Fee Collection</small>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="stats-section">
-          <div className="stat-large">
-            <strong>01</strong>
-            <span>Centralized Platform</span>
-          </div>
-          <div className="stat-large">
-            <strong>10+</strong>
-            <span>School Modules</span>
-          </div>
-          <div className="stat-large">
-            <strong>06</strong>
-            <span>Core User Roles</span>
-          </div>
-          <div className="stat-large">
-            <strong>24/7</strong>
-            <span>School Operations</span>
-          </div>
-        </section>
-
-        <section id="features" className="section">
-          <div className="section-heading">
-            <span className="section-label">EVERYTHING CONNECTED</span>
-            <h2>Everything your school needs.</h2>
-            <p>
-              Replace disconnected tools and manual processes with one
-              connected school operating system.
-            </p>
-          </div>
-
-          <div className="feature-grid">
-            <div className="feature-card featured">
-              <div className="feature-number">01</div>
-              <h3>One School. One System.</h3>
-              <p>
-                Your entire school lifecycle stays connected — from school
-                setup and student admission to attendance, fees, exams,
-                communication, and reporting.
-              </p>
-              <div className="feature-line" />
-              <span>Centralized school management →</span>
-            </div>
-
-            <div className="feature-card">
-              <div className="feature-number">02</div>
-              <h3>Built Around Your School</h3>
-              <p>
-                Configure your academic years, departments, standards,
-                classes, sections, subjects, staff, and operational structure.
-              </p>
-            </div>
-
-            <div className="feature-card">
-              <div className="feature-number">03</div>
-              <h3>Designed for Every Role</h3>
-              <p>
-                Give administrators, managers, teachers, staff, and cashiers
-                the access they need with role-based permissions.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section id="modules" className="section modules-section">
-          <div className="section-heading">
-            <span className="section-label">CORE MODULES</span>
-            <h2>Your school's entire operation.</h2>
-            <p>
-              Powerful modules designed to work together as one connected
-              platform.
-            </p>
-          </div>
-
-          <div className="module-grid">
-            {modules.map((module) => (
-              <article className="module-card" key={module.title}>
-                <div className="module-icon">{module.icon}</div>
-                <h3>{module.title}</h3>
-                <p>{module.description}</p>
-                <span className="module-arrow">→</span>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section id="how-it-works" className="section lifecycle-section">
-          <div className="section-heading">
-            <span className="section-label">HOW SSOS WORKS</span>
-            <h2>From setup to daily operations.</h2>
-            <p>
-              A simple connected lifecycle that keeps every part of your
-              school organized.
-            </p>
-          </div>
-
-          <div className="lifecycle">
-            {[
-              "Register School",
-              "Configure School",
-              "Manage People",
-              "Run Daily Operations",
-              "Track Fees & Attendance",
-              "Manage Exams & Results",
-              "Communicate",
-              "Generate Reports",
-            ].map((item, index) => (
-              <div className="lifecycle-item" key={item}>
-                <div className="lifecycle-number">
-                  {String(index + 1).padStart(2, "0")}
-                </div>
-                <span>{item}</span>
-                {index < 7 && <b>→</b>}
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="roles-section section">
-          <div className="roles-copy">
-            <span className="section-label">BUILT FOR EVERY ROLE</span>
-            <h2>One platform.<br />Different responsibilities.</h2>
-            <p>
-              SSOS adapts access and functionality based on each user's
-              responsibility inside the school.
-            </p>
-            <button className="secondary-button">
-              Explore User Roles →
-            </button>
-          </div>
-
-          <div className="roles-grid">
-            {roles.map((role) => (
-              <div className="role-card" key={role.title}>
-                <div className="role-icon">{role.icon}</div>
-                <h3>{role.title}</h3>
-                <p>{role.text}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section id="security" className="security-section section">
-          <div className="security-content">
-            <span className="section-label">SECURITY & PRIVACY</span>
-            <h2>Security built into the foundation.</h2>
-            <p>
-              School data deserves strong protection. SSOS is designed around
-              secure authentication, role-based access, tenant isolation,
-              protected documents, auditability, and privacy by design.
-            </p>
-
-            <div className="security-points">
-              <div>
-                <span>✓</span>
-                <strong>Role-based access control</strong>
-              </div>
-              <div>
-                <span>✓</span>
-                <strong>School-level data isolation</strong>
-              </div>
-              <div>
-                <span>✓</span>
-                <strong>Audit-ready activity tracking</strong>
-              </div>
-              <div>
-                <span>✓</span>
-                <strong>Protected student documents</strong>
-              </div>
-            </div>
-          </div>
-
-          <div className="security-visual">
-            <div className="shield">✓</div>
-            <div className="security-ring ring-one" />
-            <div className="security-ring ring-two" />
-            <span className="security-badge badge-one">RBAC</span>
-            <span className="security-badge badge-two">TLS</span>
-            <span className="security-badge badge-three">AUDIT</span>
-          </div>
-        </section>
-
-        <section id="pricing" className="pricing-section section">
-          <div className="section-heading">
-            <span className="section-label">SIMPLE & SCALABLE</span>
-            <h2>Built to grow with your school.</h2>
-            <p>
-              Start with the essentials and expand as your school's needs
-              grow.
-            </p>
-          </div>
-
-          <div className="pricing-card">
+          <div className="wrap heroGrid">
             <div>
-              <span className="pricing-tag">SSOS PLATFORM</span>
-              <h3>Everything in one place.</h3>
-              <p>
-                School registration, centralized management, academic
-                operations, people management, fees, examinations, transport,
-                communication, and reporting.
-              </p>
+              <span className="tag"><Sparkles size={15}/> The modern school operating system</span>
+              <h1>Run your entire school from <span>one intelligent platform.</span></h1>
+              <p>Smart School OS brings students, teachers, attendance, fees, exams, transport, communication and reports together in one secure workspace.</p>
+              <div className="heroBtns">
+                <button className="primary">Start Your School <ArrowRight size={18}/></button>
+                <button className="secondary" onClick={goPricing}>View Pricing</button>
+              </div>
+              <div className="trust">
+                <span><ShieldCheck size={16}/> Secure by design</span>
+                <span><Check size={16}/> Built for schools</span>
+                <span><Check size={16}/> Easy to use</span>
+              </div>
             </div>
 
-           <button
-  className="primary-button"
-  onClick={() => setShowRegistration(true)}
->
-  Get Started <span>→</span>
-</button>
+            <div className="dashboardMock">
+              <div className="mockTop"><b>Smart School OS</b><span></span></div>
+              <div className="mockBody">
+                <aside>
+                  <i></i><i></i><i></i><i></i><i></i>
+                </aside>
+                <div className="mockContent">
+                  <small>Welcome back, Admin</small>
+                  <h3>School Dashboard</h3>
+                  <div className="mockStats">
+                    <Stat icon={<Users/>} label="Students" value="1,248"/>
+                    <Stat icon={<GraduationCap/>} label="Teachers" value="86"/>
+                    <Stat icon={<ClipboardCheck/>} label="Attendance" value="94.8%"/>
+                    <Stat icon={<CreditCard/>} label="Fees" value="₹8.4L"/>
+                  </div>
+                  <div className="mockChart">
+                    <b>Attendance Overview</b>
+                    <div className="bars">{[35,52,44,70,58,82,67,90,75,95].map((h,i)=><i key={i} style={{height:h+"%"}}/>)}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
-        <section className="cta-section">
+        <section className="intro">
+          <div className="wrap">
+            <span className="tag">Everything connected</span>
+            <h2>Your school. One operating system.</h2>
+            <p>Replace disconnected tools and spreadsheets with one centralized platform designed around the complete school lifecycle.</p>
+          </div>
+        </section>
+
+        <section id="features" className="features wrap">
+          <Feature icon={<Users/>} title="Student Management" text="Manage student profiles, parents, documents, classes and academic information."/>
+          <Feature icon={<ClipboardCheck/>} title="Attendance" text="Record and monitor student and teacher attendance with clear insights."/>
+          <Feature icon={<CreditCard/>} title="Fees & Payments" text="Manage fee structures, collections, balances and digital-ready receipts."/>
+          <Feature icon={<BookOpen/>} title="Exams & Results" text="Create exams, enter marks and generate structured results."/>
+          <Feature icon={<GraduationCap/>} title="Teachers & Staff" text="Centralize employee information, assignments and attendance."/>
+          <Feature icon={<Bus/>} title="Transport" text="Organize buses, drivers, routes, stops and student assignments."/>
+          <Feature icon={<BarChart3/>} title="Reports" text="Get useful reports across students, attendance, fees and academics."/>
+          <Feature icon={<ShieldCheck/>} title="Secure Foundation" text="Built around authentication, roles, permissions and school-level data isolation."/>
+        </section>
+
+        <section id="modules" className="modules">
+          <div className="wrap">
+            <span className="tag">Complete school management</span>
+            <h2>Every important operation, connected.</h2>
+            <div className="moduleGrid">
+              {["Academic Management","People Management","Daily Attendance","Fee Management","Examination","Transport","Communication","Reports & Analytics"].map((x,i)=>
+                <div className="module" key={x}><span>0{i+1}</span><b>{x}</b><ArrowRight size={17}/></div>
+              )}
+            </div>
+          </div>
+        </section>
+
+        <section id="about" className="about wrap">
           <div>
-            <span className="section-label">READY TO LEVEL UP YOUR SCHOOL?</span>
-            <h2>Bring your entire school together.</h2>
-            <p>
-              Create your school workspace and start building a smarter,
-              centralized school operation.
-            </p>
+            <span className="tag">How it works</span>
+            <h2>From school registration to daily operations.</h2>
           </div>
-
-          <button className="primary-button large">
-            Get Started With SSOS →
-          </button>
+          <div className="steps">
+            {["Register your school","Set up academic structure","Manage daily operations","Understand your school with data"].map((x,i)=>
+              <div key={x}><strong>{i+1}</strong><div><b>{x}</b><p>Simple, connected and designed for everyday school teams.</p></div></div>
+            )}
+          </div>
         </section>
+
+        <section className="pricingPreview wrap">
+          <div><span className="tag">Pricing</span><h2>Start simple. Scale when you need.</h2><p>Flexible plans designed around different school sizes and operational needs.</p></div>
+          <button className="primary" onClick={goPricing}>Explore Pricing <ArrowRight size={17}/></button>
+        </section>
+
+        <CTA />
       </main>
-
-      <footer className="footer">
-        <div className="footer-brand">
-          <a href="#" className="brand">
-            <span className="brand-mark">S</span>
-            <span>
-              <strong>Smart School</strong>
-              <small>OS</small>
-            </span>
-          </a>
-          <p>
-            The intelligent operating system for modern school management.
-          </p>
-        </div>
-
-        <div className="footer-links">
-          <div>
-            <strong>Platform</strong>
-            <a href="#features">Features</a>
-            <a href="#modules">Modules</a>
-            <a href="#how-it-works">How It Works</a>
-          </div>
-          <div>
-            <strong>Company</strong>
-            <a href="#">About</a>
-            <a href="#">Contact</a>
-            <a href="#">Support</a>
-          </div>
-          <div>
-            <strong>Access</strong>
-            <a href="#">Login</a>
-            <a href="#">Register School</a>
-          </div>
-        </div>
-
-        <div className="footer-bottom">
-          <span>© 2026 Smart School OS. All rights reserved.</span>
-          <span>Built for better schools.</span>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
 
-export default App;
+function PriceCard({name,desc,price,features,action,featured=false}:{name:string;desc:string;price:string;features:string[];action:string;featured?:boolean}) {
+  return <div className={featured ? "priceCard featured" : "priceCard"}>
+    {featured && <div className="popular">Most Popular</div>}
+    <h3>{name}</h3><p>{desc}</p>
+    <div className="price">{price}{price !== "Custom" && <small>/ month</small>}</div>
+    <div className="priceFeatures">{features.map(f=><span key={f}><Check size={16}/>{f}</span>)}</div>
+    <button className={featured ? "primary full" : "secondary full"}>{action} <ArrowRight size={16}/></button>
+  </div>;
+}
+
+function Feature({icon,title,text}:{icon:any;title:string;text:string}) {
+  return <article className="feature"><span className="featureIcon">{icon}</span><h3>{title}</h3><p>{text}</p><a href="#contact">Learn more <ArrowRight size={15}/></a></article>;
+}
+
+function Stat({icon,label,value}:{icon:any;label:string;value:string}) {
+  return <div className="stat"><span>{icon}</span><small>{label}</small><b>{value}</b></div>;
+}
+
+function CTA({onClick}:{onClick?:()=>void}) {
+  return <section className="cta"><div className="wrap"><span className="tag light">Ready to modernize your school?</span><h2>Give your school one connected system.</h2><p>Build your school's digital foundation with Smart School OS.</p><button className="whiteBtn" onClick={onClick}>Get Started <ArrowRight size={17}/></button></div></section>;
+}
+
+function Footer() {
+  return <footer id="contact"><div className="wrap footerGrid">
+    <div><button className="brand"><span className="logo"><GraduationCap size={21}/></span>Smart School <b>OS</b></button><p>The modern operating system for schools.</p></div>
+    <div><b>Platform</b><a href="#features">Features</a><a href="#modules">Modules</a><a href="#pricing">Pricing</a></div>
+    <div><b>Company</b><a href="#about">About</a><a href="#contact">Contact</a></div>
+    <div><b>Support</b><a href="#contact">Help Center</a><a href="#contact">Privacy</a></div>
+  </div><div className="wrap copyright">© 2026 Smart School OS. All rights reserved.</div></footer>;
+}
