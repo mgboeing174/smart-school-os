@@ -1,232 +1,368 @@
 import { useState } from "react";
 import {
-  ArrowRight, Check, Menu, X, GraduationCap, Users, ClipboardCheck,
-  CreditCard, BookOpen, Bus, BarChart3, ShieldCheck, Sparkles
+  ArrowRight, Check, ChevronDown, Menu, X, ShieldCheck, Users,
+  GraduationCap, BarChart3, BookOpen, Bus, CreditCard, Bell,
+  ClipboardCheck, Building2, Sparkles, CheckCircle2, LogIn
 } from "lucide-react";
+import "./App.css";
 
-export default function App() {
-  const [menu, setMenu] = useState(false);
-  const [pricing, setPricing] = useState(false);
+type Page = "home" | "pricing" | "details" | "register" | "login";
 
-  const goPricing = () => {
-    setPricing(true);
-    setMenu(false);
-    setTimeout(() => document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth" }), 50);
+const plans = {
+  Starter: {
+    price: "₹1,999",
+    period: "/month",
+    description: "For small schools getting started with centralized management.",
+    features: [
+      "Up to 300 students",
+      "Student & parent management",
+      "Teacher management",
+      "Attendance management",
+      "Basic fee collection",
+      "Basic reports",
+      "Role-based access",
+      "Email support"
+    ]
+  },
+  Professional: {
+    price: "₹4,999",
+    period: "/month",
+    description: "For growing schools that need complete daily operations.",
+    features: [
+      "Up to 1,000 students",
+      "Everything in Starter",
+      "Exams & marks",
+      "Results & report cards",
+      "Transport management",
+      "Announcements",
+      "Advanced reports",
+      "Receipt management",
+      "Priority support"
+    ]
+  },
+  Enterprise: {
+    price: "Custom",
+    period: "",
+    description: "For large institutions and multi-school organizations.",
+    features: [
+      "Unlimited students",
+      "Everything in Professional",
+      "Multi-school management",
+      "Advanced administration",
+      "Custom integrations",
+      "Dedicated onboarding",
+      "Priority infrastructure",
+      "Custom support",
+      "Future SaaS capabilities"
+    ]
+  }
+};
+
+const modules = [
+  ["Students", "Manage student profiles, parents, academics, attendance and documents.", Users],
+  ["Teachers & Staff", "Centralize employee information, assignments and attendance.", GraduationCap],
+  ["Attendance", "Record student and teacher attendance with useful reports.", ClipboardCheck],
+  ["Fees", "Manage fee structures, collections, balances and receipts.", CreditCard],
+  ["Examination", "Manage exams, marks, grades, results and report cards.", BookOpen],
+  ["Transport", "Manage buses, drivers, routes, stops and student assignments.", Bus],
+  ["Communication", "Publish announcements and internal notifications.", Bell],
+  ["Reports", "View operational and academic reports across your school.", BarChart3],
+];
+
+function App() {
+  const [page, setPage] = useState<Page>("home");
+  const [selectedPlan, setSelectedPlan] = useState("Professional");
+  const [mobileMenu, setMobileMenu] = useState(false);
+
+  const go = (target: Page) => {
+    setPage(target);
+    setMobileMenu(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  if (pricing) {
+  const choosePlan = (plan: string) => {
+    setSelectedPlan(plan);
+    go("register");
+  };
+
+
+  if (page === "login") {
+    return (
+      <div className="auth-page">
+        <div className="auth-card">
+          <button className="back-link" onClick={() => go("home")}>← Back to website</button>
+          <div className="brand large"><span>SS</span> Smart School OS</div>
+          <h1>Welcome back</h1>
+          <p>Sign in to your school management system.</p>
+          <label>Email or Username</label>
+          <input placeholder="admin@school.com" />
+          <label>Password</label>
+          <input type="password" placeholder="••••••••" />
+          <div className="auth-row">
+            <label className="check"><input type="checkbox" /> Remember me</label>
+            <button className="text-button">Forgot password?</button>
+          </div>
+          <button className="primary full" onClick={() => go("home")}>
+            <LogIn size={18}/> Sign In
+          </button>
+          <p className="auth-bottom">Demo login UI — authentication will be connected in Phase 1.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (page === "register") {
+    return (
+      <div className="auth-page">
+        <div className="register-card">
+          <button className="back-link" onClick={() => go("home")}>← Back to website</button>
+          <div className="brand large"><span>SS</span> Smart School OS</div>
+          <div className="selected-plan">Selected plan: <strong>{selectedPlan}</strong></div>
+          <h1>Create your school</h1>
+          <p>Set up your Smart School OS workspace.</p>
+          <div className="form-grid">
+            <div><label>School Name</label><input placeholder="Your School Name" /></div>
+            <div><label>School Email</label><input placeholder="school@example.com" /></div>
+            <div><label>Phone</label><input placeholder="+91 XXXXX XXXXX" /></div>
+            <div><label>Board</label><select><option>CBSE</option><option>ICSE</option><option>State Board</option><option>Matriculation</option></select></div>
+            <div className="wide"><label>Address</label><input placeholder="School address" /></div>
+            <div><label>State</label><input placeholder="Tamil Nadu" /></div>
+            <div><label>District</label><input placeholder="District" /></div>
+          </div>
+          <button className="primary full" onClick={() => alert("Registration workflow will be connected to Phase 1 School Setup.")}>
+            Continue School Setup <ArrowRight size={18}/>
+          </button>
+          <p className="auth-bottom">School ID will be generated after setup.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (page === "details") {
     return (
       <div className="site">
-        <header className="nav">
-          <div className="wrap navin">
-            <button className="brand" onClick={() => setPricing(false)}>
-              <span className="logo"><GraduationCap size={21}/></span>
-              Smart School <b>OS</b>
-            </button>
-            <button className="primary" onClick={() => setPricing(false)}>Back Home</button>
-          </div>
-        </header>
-
-        <section className="priceHero">
-          <span className="tag"><Sparkles size={15}/> Simple school pricing</span>
-          <h1>Plans built for <span>every school.</span></h1>
-          <p>Start with the essentials and scale your school operations as you grow.</p>
-        </section>
-
-        <section id="pricing" className="pricing wrap">
-          <PriceCard
-            name="Starter"
-            desc="For small schools getting started"
-            price="₹2,999"
-            features={["Student management","Attendance management","Teacher management","Basic reports","School profile","Academic year"]}
-            action="Start Free Setup"
-          />
-          <PriceCard
-            featured
-            name="Professional"
-            desc="For growing schools"
-            price="₹6,999"
-            features={["Everything in Starter","Fees & receipts","Exams & results","Parent management","Transport management","Announcements","Advanced reports"]}
-            action="Get Started"
-          />
-          <PriceCard
-            name="Enterprise"
-            desc="For larger institutions"
-            price="Custom"
-            features={["Everything in Professional","Multiple school support","Advanced administration","Custom workflows","Priority support","Enterprise controls"]}
-            action="Contact Us"
-          />
-        </section>
-
-        <section className="comparison wrap">
-          <h2>Everything connected in one platform.</h2>
-          <p>One system for the complete school lifecycle.</p>
-          <div className="compareGrid">
-            {["Students","Attendance","Fees","Exams & Results","Teachers & Staff","Transport","Communication","Reports"].map(x =>
-              <div key={x}><Check size={17}/>{x}</div>
-            )}
+        <Header go={go} mobileMenu={mobileMenu} setMobileMenu={setMobileMenu}/>
+        <section className="detail-hero">
+          <div className="container">
+            <button className="back-link light" onClick={() => go("pricing")}>← Back to Pricing</button>
+            <div className="eyebrow">PRICING DETAILS</div>
+            <h1>Choose the plan that fits your school.</h1>
+            <p>Start with the tools you need today and expand as your school grows.</p>
           </div>
         </section>
 
-        <CTA onClick={() => setPricing(false)} />
-        <Footer />
+        <section className="section">
+          <div className="container">
+            <div className="detail-grid">
+              {Object.entries(plans).map(([name, plan]) => (
+                <div className={`detail-card ${name === "Professional" ? "featured" : ""}`} key={name}>
+                  {name === "Professional" && <div className="popular">MOST POPULAR</div>}
+                  <h2>{name}</h2>
+                  <p>{plan.description}</p>
+                  <div className="detail-price">{plan.price}<small>{plan.period}</small></div>
+                  <button className="primary full" onClick={() => choosePlan(name)}>
+                    Choose {name} <ArrowRight size={17}/>
+                  </button>
+                  <div className="feature-list">
+                    {plan.features.map(f => <div key={f}><CheckCircle2 size={17}/>{f}</div>)}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="comparison">
+              <h2>What's included</h2>
+              <p>All plans are designed around the complete school lifecycle.</p>
+              {[
+                ["School profile & School ID", "✓", "✓", "✓"],
+                ["Students & Parents", "✓", "✓", "✓"],
+                ["Teachers & Staff", "✓", "✓", "✓"],
+                ["Attendance", "✓", "✓", "✓"],
+                ["Fees & Receipts", "Basic", "✓", "✓"],
+                ["Exams & Results", "—", "✓", "✓"],
+                ["Transport", "—", "✓", "✓"],
+                ["Reports", "Basic", "Advanced", "Advanced"],
+                ["Multi-school", "—", "—", "✓"],
+                ["Dedicated Support", "—", "Priority", "✓"]
+              ].map(row => (
+                <div className="comparison-row" key={row[0]}>
+                  <strong>{row[0]}</strong><span>{row[1]}</span><span>{row[2]}</span><span>{row[3]}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+        <Footer go={go}/>
+      </div>
+    );
+  }
+
+  if (page === "pricing") {
+    return (
+      <div className="site">
+        <Header go={go} mobileMenu={mobileMenu} setMobileMenu={setMobileMenu}/>
+        <section className="pricing-hero">
+          <div className="container center">
+            <div className="eyebrow">SIMPLE, TRANSPARENT PRICING</div>
+            <h1>Plans built for modern schools.</h1>
+            <p>Start small, grow confidently, and manage your complete school operation from one platform.</p>
+          </div>
+        </section>
+        <section className="section pricing-section">
+          <div className="container">
+            <div className="pricing-grid">
+              {Object.entries(plans).map(([name, plan]) => (
+                <PriceCard key={name} name={name} plan={plan} choosePlan={choosePlan} details={() => go("details")}/>
+              ))}
+            </div>
+            <div className="pricing-note">
+              <ShieldCheck size={22}/>
+              <div><strong>Secure by design.</strong><br/>School data isolation, role-based access and audit-ready architecture are built into SSOS.</div>
+            </div>
+          </div>
+        </section>
+        <Footer go={go}/>
       </div>
     );
   }
 
   return (
     <div className="site">
-      <header className="nav">
-        <div className="wrap navin">
-          <button className="brand">
-            <span className="logo"><GraduationCap size={21}/></span>
-            Smart School <b>OS</b>
-          </button>
-
-          <nav className={menu ? "navlinks open" : "navlinks"}>
-            <a href="#features" onClick={() => setMenu(false)}>Features</a>
-            <a href="#modules" onClick={() => setMenu(false)}>Modules</a>
-            <button onClick={goPricing}>Pricing</button>
-            <a href="#about" onClick={() => setMenu(false)}>About</a>
-            <a href="#contact" onClick={() => setMenu(false)}>Contact</a>
-          </nav>
-
-          <div className="navbuttons">
-            <button className="login">Login</button>
-            <button className="primary">Get Started <ArrowRight size={16}/></button>
-          </div>
-
-          <button className="menubtn" onClick={() => setMenu(!menu)}>
-            {menu ? <X/> : <Menu/>}
-          </button>
-        </div>
-      </header>
-
+      <Header go={go} mobileMenu={mobileMenu} setMobileMenu={setMobileMenu}/>
       <main>
         <section className="hero">
-          <div className="wrap heroGrid">
+          <div className="container hero-grid">
             <div>
-              <span className="tag"><Sparkles size={15}/> The modern school operating system</span>
-              <h1>Run your entire school from <span>one intelligent platform.</span></h1>
-              <p>Smart School OS brings students, teachers, attendance, fees, exams, transport, communication and reports together in one secure workspace.</p>
-              <div className="heroBtns">
-                <button className="primary">Start Your School <ArrowRight size={18}/></button>
-                <button className="secondary" onClick={goPricing}>View Pricing</button>
+              <div className="eyebrow"><Sparkles size={16}/> THE SCHOOL OPERATING SYSTEM</div>
+              <h1>Run your entire school from <span>one system.</span></h1>
+              <p className="hero-text">Smart School OS brings school administration, students, teachers, attendance, fees, exams, transport and communication together in one centralized platform.</p>
+              <div className="hero-actions">
+                <button className="primary" onClick={() => go("register")}>Get Started <ArrowRight size={18}/></button>
+                <button className="secondary" onClick={() => go("pricing")}>View Pricing</button>
               </div>
-              <div className="trust">
-                <span><ShieldCheck size={16}/> Secure by design</span>
-                <span><Check size={16}/> Built for schools</span>
-                <span><Check size={16}/> Easy to use</span>
-              </div>
+              <div className="trust"><ShieldCheck size={17}/> SaaS-ready architecture • Role-based access • Centralized school data</div>
             </div>
+            <DashboardMockup/>
+          </div>
+        </section>
 
-            <div className="dashboardMock">
-              <div className="mockTop"><b>Smart School OS</b><span></span></div>
-              <div className="mockBody">
-                <aside>
-                  <i></i><i></i><i></i><i></i><i></i>
-                </aside>
-                <div className="mockContent">
-                  <small>Welcome back, Admin</small>
-                  <h3>School Dashboard</h3>
-                  <div className="mockStats">
-                    <Stat icon={<Users/>} label="Students" value="1,248"/>
-                    <Stat icon={<GraduationCap/>} label="Teachers" value="86"/>
-                    <Stat icon={<ClipboardCheck/>} label="Attendance" value="94.8%"/>
-                    <Stat icon={<CreditCard/>} label="Fees" value="₹8.4L"/>
-                  </div>
-                  <div className="mockChart">
-                    <b>Attendance Overview</b>
-                    <div className="bars">{[35,52,44,70,58,82,67,90,75,95].map((h,i)=><i key={i} style={{height:h+"%"}}/>)}</div>
-                  </div>
+        <section className="stats-section">
+          <div className="container stats">
+            <Stat value="1" label="Centralized System"/>
+            <Stat value="30+" label="School Operations"/>
+            <Stat value="100%" label="Role Based"/>
+            <Stat value="24/7" label="Accessible"/>
+          </div>
+        </section>
+
+        <section className="section" id="features">
+          <div className="container">
+            <SectionTitle eyebrow="WHY SSOS" title="Everything your school needs. Nothing scattered." text="Replace disconnected spreadsheets, registers and separate tools with one school operating system."/>
+            <div className="feature-grid">
+              <Feature icon={<Building2/>} title="One School. One ID." text="Every school gets a unique School ID and a centralized tenant workspace."/>
+              <Feature icon={<ShieldCheck/>} title="Secure by Design" text="Role-based access and tenant isolation keep school information protected."/>
+              <Feature icon={<BarChart3/>} title="Real-time Visibility" text="Understand attendance, fees, students and academic performance at a glance."/>
+              <Feature icon={<Users/>} title="Connected People" text="Students, parents, teachers and staff work from the same source of truth."/>
+            </div>
+          </div>
+        </section>
+
+        <section className="section soft" id="modules">
+          <div className="container">
+            <SectionTitle eyebrow="COMPLETE SCHOOL OPERATIONS" title="One platform. Every major workflow." text="SSOS is designed around the complete school lifecycle."/>
+            <div className="module-grid">
+              {modules.map(([title, text, Icon]: any) => (
+                <div className="module-card" key={title}>
+                  <div className="icon-box"><Icon size={22}/></div>
+                  <h3>{title}</h3><p>{text}</p>
+                  <button onClick={() => go("register")}>Explore <ArrowRight size={15}/></button>
                 </div>
-              </div>
+              ))}
             </div>
           </div>
         </section>
 
-        <section className="intro">
-          <div className="wrap">
-            <span className="tag">Everything connected</span>
-            <h2>Your school. One operating system.</h2>
-            <p>Replace disconnected tools and spreadsheets with one centralized platform designed around the complete school lifecycle.</p>
-          </div>
-        </section>
-
-        <section id="features" className="features wrap">
-          <Feature icon={<Users/>} title="Student Management" text="Manage student profiles, parents, documents, classes and academic information."/>
-          <Feature icon={<ClipboardCheck/>} title="Attendance" text="Record and monitor student and teacher attendance with clear insights."/>
-          <Feature icon={<CreditCard/>} title="Fees & Payments" text="Manage fee structures, collections, balances and digital-ready receipts."/>
-          <Feature icon={<BookOpen/>} title="Exams & Results" text="Create exams, enter marks and generate structured results."/>
-          <Feature icon={<GraduationCap/>} title="Teachers & Staff" text="Centralize employee information, assignments and attendance."/>
-          <Feature icon={<Bus/>} title="Transport" text="Organize buses, drivers, routes, stops and student assignments."/>
-          <Feature icon={<BarChart3/>} title="Reports" text="Get useful reports across students, attendance, fees and academics."/>
-          <Feature icon={<ShieldCheck/>} title="Secure Foundation" text="Built around authentication, roles, permissions and school-level data isolation."/>
-        </section>
-
-        <section id="modules" className="modules">
-          <div className="wrap">
-            <span className="tag">Complete school management</span>
-            <h2>Every important operation, connected.</h2>
-            <div className="moduleGrid">
-              {["Academic Management","People Management","Daily Attendance","Fee Management","Examination","Transport","Communication","Reports & Analytics"].map((x,i)=>
-                <div className="module" key={x}><span>0{i+1}</span><b>{x}</b><ArrowRight size={17}/></div>
-              )}
+        <section className="section" id="how">
+          <div className="container">
+            <SectionTitle eyebrow="HOW IT WORKS" title="From school registration to daily operations."/>
+            <div className="steps">
+              {[
+                ["01","Register School","Enter school information and structure."],
+                ["02","Get School ID","SSOS creates your unique school workspace."],
+                ["03","Configure School","Set academic year, classes, sections, subjects and departments."],
+                ["04","Run Everything","Manage people, attendance, fees, exams, transport and reports."]
+              ].map(([n,t,d]) => <div className="step" key={n}><div className="step-num">{n}</div><h3>{t}</h3><p>{d}</p></div>)}
             </div>
           </div>
         </section>
 
-        <section id="about" className="about wrap">
-          <div>
-            <span className="tag">How it works</span>
-            <h2>From school registration to daily operations.</h2>
-          </div>
-          <div className="steps">
-            {["Register your school","Set up academic structure","Manage daily operations","Understand your school with data"].map((x,i)=>
-              <div key={x}><strong>{i+1}</strong><div><b>{x}</b><p>Simple, connected and designed for everyday school teams.</p></div></div>
-            )}
+        <section className="pricing-preview">
+          <div className="container">
+            <SectionTitle eyebrow="PRICING" title="Start with the plan that fits your school." text="Transparent plans designed to scale with your school."/>
+            <div className="pricing-grid">
+              {Object.entries(plans).map(([name, plan]) => (
+                <PriceCard key={name} name={name} plan={plan} choosePlan={choosePlan} details={() => go("details")}/>
+              ))}
+            </div>
+            <div className="center view-all"><button className="secondary" onClick={() => go("pricing")}>View Complete Pricing <ArrowRight size={17}/></button></div>
           </div>
         </section>
 
-        <section className="pricingPreview wrap">
-          <div><span className="tag">Pricing</span><h2>Start simple. Scale when you need.</h2><p>Flexible plans designed around different school sizes and operational needs.</p></div>
-          <button className="primary" onClick={goPricing}>Explore Pricing <ArrowRight size={17}/></button>
+        <section className="cta-section">
+          <div className="container cta">
+            <div><div className="eyebrow light">READY TO LEVEL UP YOUR SCHOOL?</div><h2>Build a smarter school operation.</h2><p>Start with one School ID and one centralized system.</p></div>
+            <button className="white-button" onClick={() => go("register")}>Get Started <ArrowRight size={18}/></button>
+          </div>
         </section>
-
-        <CTA />
       </main>
-      <Footer />
+      <Footer go={go}/>
     </div>
   );
 }
 
-function PriceCard({name,desc,price,features,action,featured=false}:{name:string;desc:string;price:string;features:string[];action:string;featured?:boolean}) {
-  return <div className={featured ? "priceCard featured" : "priceCard"}>
-    {featured && <div className="popular">Most Popular</div>}
-    <h3>{name}</h3><p>{desc}</p>
-    <div className="price">{price}{price !== "Custom" && <small>/ month</small>}</div>
-    <div className="priceFeatures">{features.map(f=><span key={f}><Check size={16}/>{f}</span>)}</div>
-    <button className={featured ? "primary full" : "secondary full"}>{action} <ArrowRight size={16}/></button>
+function Header({go,mobileMenu,setMobileMenu}:{go:(p:Page)=>void,mobileMenu:boolean,setMobileMenu:(v:boolean)=>void}) {
+  return <header className="header">
+    <div className="container nav">
+      <button className="brand" onClick={() => go("home")}><span>SS</span> Smart School OS</button>
+      <nav className={mobileMenu ? "mobile-open" : ""}>
+        <button onClick={() => go("home")}>Home</button>
+        <button onClick={() => document.getElementById("features")?.scrollIntoView({behavior:"smooth"})}>Features</button>
+        <button onClick={() => document.getElementById("modules")?.scrollIntoView({behavior:"smooth"})}>Modules</button>
+        <button onClick={() => document.getElementById("how")?.scrollIntoView({behavior:"smooth"})}>How It Works</button>
+        <button onClick={() => go("pricing")}>Pricing</button>
+        <button className="nav-login" onClick={() => go("login")}>Login</button>
+        <button className="nav-start" onClick={() => go("register")}>Get Started</button>
+      </nav>
+      <button className="menu-btn" onClick={() => setMobileMenu(!mobileMenu)}>{mobileMenu ? <X/> : <Menu/>}</button>
+    </div>
+  </header>;
+}
+
+function PriceCard({name,plan,choosePlan,details}:{name:string,plan:any,choosePlan:(n:string)=>void,details:()=>void}) {
+  return <div className={`price-card ${name==="Professional" ? "popular-card":""}`}>
+    {name==="Professional" && <div className="popular">MOST POPULAR</div>}
+    <h3>{name}</h3><p>{plan.description}</p>
+    <div className="price">{plan.price}<small>{plan.period}</small></div>
+    <div className="feature-list">{plan.features.slice(0,6).map((f:string)=><div key={f}><Check size={16}/>{f}</div>)}</div>
+    <button className={name==="Professional" ? "primary full":"secondary full"} onClick={() => choosePlan(name)}>Choose Plan <ArrowRight size={17}/></button>
+    <button className="details-button" onClick={details}>View Details <ChevronDown size={16}/></button>
   </div>;
 }
 
-function Feature({icon,title,text}:{icon:any;title:string;text:string}) {
-  return <article className="feature"><span className="featureIcon">{icon}</span><h3>{title}</h3><p>{text}</p><a href="#contact">Learn more <ArrowRight size={15}/></a></article>;
+function DashboardMockup() {
+  return <div className="dashboard-mock">
+    <div className="mock-top"><div className="mock-brand">SSOS</div><div className="mock-user">Admin</div></div>
+    <div className="mock-body"><aside><div className="mock-active">Dashboard</div><div>Students</div><div>Attendance</div><div>Fees</div><div>Exams</div><div>Transport</div></aside>
+    <div className="mock-content"><div className="mock-title">Good morning, Admin</div><div className="mock-cards"><div><b>1,248</b><small>Students</small></div><div><b>86%</b><small>Attendance</small></div><div><b>₹2.4L</b><small>Collection</small></div></div><div className="mock-chart"><div className="bars"><i/><i/><i/><i/><i/><i/><i/></div></div></div></div>
+  </div>;
 }
 
-function Stat({icon,label,value}:{icon:any;label:string;value:string}) {
-  return <div className="stat"><span>{icon}</span><small>{label}</small><b>{value}</b></div>;
+function Feature({icon,title,text}:{icon:any,title:string,text:string}) { return <div className="feature-card"><div className="icon-box">{icon}</div><h3>{title}</h3><p>{text}</p></div>; }
+function Stat({value,label}:{value:string,label:string}) { return <div><strong>{value}</strong><span>{label}</span></div>; }
+function SectionTitle({eyebrow,title,text}:{eyebrow:string,title:string,text?:string}) { return <div className="section-title"><div className="eyebrow">{eyebrow}</div><h2>{title}</h2>{text&&<p>{text}</p>}</div>; }
+
+function Footer({go}:{go:(p:Page)=>void}) {
+  return <footer><div className="container footer-grid"><div><button className="brand footer-brand" onClick={()=>go("home")}><span>SS</span> Smart School OS</button><p>One school. One School ID. One centralized system.</p></div><div><h4>Product</h4><button onClick={()=>go("pricing")}>Pricing</button><button onClick={()=>go("details")}>Pricing Details</button><button onClick={()=>go("register")}>Get Started</button></div><div><h4>Platform</h4><button onClick={()=>go("home")}>Features</button><button onClick={()=>go("home")}>Modules</button><button onClick={()=>go("home")}>How It Works</button></div><div><h4>Account</h4><button onClick={()=>go("login")}>Login</button><button onClick={()=>go("register")}>Create School</button></div></div><div className="container footer-bottom">© 2026 Smart School OS. All rights reserved.</div></footer>;
 }
 
-function CTA({onClick}:{onClick?:()=>void}) {
-  return <section className="cta"><div className="wrap"><span className="tag light">Ready to modernize your school?</span><h2>Give your school one connected system.</h2><p>Build your school's digital foundation with Smart School OS.</p><button className="whiteBtn" onClick={onClick}>Get Started <ArrowRight size={17}/></button></div></section>;
-}
-
-function Footer() {
-  return <footer id="contact"><div className="wrap footerGrid">
-    <div><button className="brand"><span className="logo"><GraduationCap size={21}/></span>Smart School <b>OS</b></button><p>The modern operating system for schools.</p></div>
-    <div><b>Platform</b><a href="#features">Features</a><a href="#modules">Modules</a><a href="#pricing">Pricing</a></div>
-    <div><b>Company</b><a href="#about">About</a><a href="#contact">Contact</a></div>
-    <div><b>Support</b><a href="#contact">Help Center</a><a href="#contact">Privacy</a></div>
-  </div><div className="wrap copyright">© 2026 Smart School OS. All rights reserved.</div></footer>;
-}
+export default App;
