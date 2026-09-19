@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import "./App.css";
 
-type Page = "home" | "pricing" | "details" | "signup" | "register" | "login";
+type Page = "home" | "pricing" | "details" | "payment" | "signup" | "register" | "login";
 
 const plans = {
   Starter: {
@@ -82,7 +82,7 @@ function App() {
 
   const choosePlan = (plan: string) => {
     setSelectedPlan(plan);
-    go("signup");
+    go("payment");
   };
 
 
@@ -106,6 +106,77 @@ function App() {
             <LogIn size={18}/> Sign In
           </button>
           <p className="auth-bottom">Demo login UI — authentication will be connected in Phase 1.</p>
+        </div>
+      </div>
+    );
+  }
+
+
+  if (page === "payment") {
+    const plan = plans[selectedPlan as keyof typeof plans];
+
+    return (
+      <div className="auth-page">
+        <div className="payment-card">
+
+          <button className="back-link" onClick={() => go("pricing")}>
+            ← Back to Pricing
+          </button>
+
+          <div className="brand large">
+            <span>SS</span> Smart School OS
+          </div>
+
+          <div className="eyebrow">SECURE CHECKOUT</div>
+
+          <h1>Complete your plan</h1>
+          <p>
+            Confirm your SSOS plan to continue with school setup.
+          </p>
+
+          <div className="payment-plan">
+            <div>
+              <span>Selected Plan</span>
+              <strong>{selectedPlan}</strong>
+            </div>
+            <div className="payment-price">
+              {plan.price}
+              <small>{plan.period}</small>
+            </div>
+          </div>
+
+          <div className="payment-features">
+            <h3>Included with {selectedPlan}</h3>
+
+            {plan.features.map((feature) => (
+              <div key={feature}>
+                <CheckCircle2 size={17} />
+                {feature}
+              </div>
+            ))}
+          </div>
+
+          <div className="payment-demo-notice">
+            <ShieldCheck size={20} />
+            <div>
+              <strong>Demo checkout</strong>
+              <p>
+                Payment gateway integration will be connected during the
+                production billing phase. No real card information is stored.
+              </p>
+            </div>
+          </div>
+
+          <button
+            className="primary full"
+            onClick={() => go("signup")}
+          >
+            Pay & Continue <ArrowRight size={18} />
+          </button>
+
+          <p className="auth-bottom">
+            Secure school onboarding • Role-based access • School data isolation
+          </p>
         </div>
       </div>
     );
@@ -384,7 +455,14 @@ function App() {
                 <PriceCard key={name} name={name} plan={plan} choosePlan={choosePlan} details={() => go("details")}/>
               ))}
             </div>
-            <div className="center view-all"><button className="secondary" onClick={() => go("pricing")}>View Complete Pricing <ArrowRight size={17}/></button></div>
+            <div className="center view-all">
+                <button className="secondary" onClick={() => go("pricing")}>
+                  View Complete Pricing <ArrowRight size={17}/>
+                </button>
+                <button className="secondary" onClick={() => window.location.href="/demo"}>
+                  Book a Demo <ArrowRight size={17}/>
+                </button>
+              </div>
           </div>
         </section>
 
@@ -410,6 +488,9 @@ function Header({go,mobileMenu,setMobileMenu}:{go:(p:Page)=>void,mobileMenu:bool
         <button onClick={() => document.getElementById("modules")?.scrollIntoView({behavior:"smooth"})}>Modules</button>
         <button onClick={() => document.getElementById("how")?.scrollIntoView({behavior:"smooth"})}>How It Works</button>
         <button onClick={() => go("pricing")}>Pricing</button>
+        <button className="nav-demo" onClick={() => window.location.href="/demo"}>
+          Book Demo
+        </button>
         <button className="nav-login" onClick={() => go("login")}>Login</button>
         <button className="nav-start" onClick={() => go("pricing")}>Get Started</button>
       </nav>
@@ -442,7 +523,7 @@ function Stat({value,label}:{value:string,label:string}) { return <div><strong>{
 function SectionTitle({eyebrow,title,text}:{eyebrow:string,title:string,text?:string}) { return <div className="section-title"><div className="eyebrow">{eyebrow}</div><h2>{title}</h2>{text&&<p>{text}</p>}</div>; }
 
 function Footer({go}:{go:(p:Page)=>void}) {
-  return <footer><div className="container footer-grid"><div><button className="brand footer-brand" onClick={()=>go("home")}><span>SS</span> Smart School OS</button><p>One school. One School ID. One centralized system.</p></div><div><h4>Product</h4><button onClick={()=>go("pricing")}>Pricing</button><button onClick={()=>go("details")}>Pricing Details</button><button onClick={()=>go("register")}>Get Started</button></div><div><h4>Platform</h4><button onClick={()=>go("home")}>Features</button><button onClick={()=>go("home")}>Modules</button><button onClick={()=>go("home")}>How It Works</button></div><div><h4>Account</h4><button onClick={()=>go("login")}>Login</button><button onClick={()=>go("register")}>Create School</button></div></div><div className="container footer-bottom">© 2026 Smart School OS. All rights reserved.</div></footer>;
+  return <footer><div className="container footer-grid"><div><button className="brand footer-brand" onClick={()=>go("home")}><span>SS</span> Smart School OS</button><p>One school. One School ID. One centralized system.</p></div><div><h4>Product</h4><button onClick={()=>go("pricing")}>Pricing</button><button onClick={()=>go("details")}>Pricing Details</button><button onClick={()=>window.location.href="/demo"}>Book Demo</button><button onClick={()=>go("pricing")}>Get Started</button></div><div><h4>Platform</h4><button onClick={()=>go("home")}>Features</button><button onClick={()=>go("home")}>Modules</button><button onClick={()=>go("home")}>How It Works</button></div><div><h4>Account</h4><button onClick={()=>go("login")}>Login</button><button onClick={()=>go("pricing")}>Create School</button></div></div><div className="container footer-bottom">© 2026 Smart School OS. All rights reserved.</div></footer>;
 }
 
 export default App;
