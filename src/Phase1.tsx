@@ -128,7 +128,7 @@ export default function Phase1() {
                 ].map(([a,b,c,d,I]) => (
                   <div className="p1-card" key={a as string}>
                     <div className="p1-card-icon"><I size={21}/></div>
-                    <span>{a}</span><strong>{b}</strong><small>{c} <em>{d}</em></small>
+                    <span>{a as string}</span><strong>{b as string}</strong><small>{c as string} <em>{d as string}</em></small>
                   </div>
                 ))}
               </div>
