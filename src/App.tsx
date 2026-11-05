@@ -488,11 +488,11 @@ function Header({go,mobileMenu,setMobileMenu}:{go:(p:Page)=>void,mobileMenu:bool
         <button onClick={() => document.getElementById("modules")?.scrollIntoView({behavior:"smooth"})}>Modules</button>
         <button onClick={() => document.getElementById("how")?.scrollIntoView({behavior:"smooth"})}>How It Works</button>
         <button onClick={() => go("pricing")}>Pricing</button>
-        <button className="nav-demo" onClick={() => window.location.href="/demo"}>
-          Book Demo
+        <button className="nav-demo" onClick={() => window.location.href="/trial"}>
+          Free Trial (7 days)
         </button>
-        <button className="nav-login" onClick={() => go("login")}>Login</button>
-        <button className="nav-start" onClick={() => go("pricing")}>Get Started</button>
+        
+        <button className="nav-start" onClick={() => window.location.href="/install"}>Install / Download SSOS</button>
       </nav>
       <button className="menu-btn" onClick={() => setMobileMenu(!mobileMenu)}>{mobileMenu ? <X/> : <Menu/>}</button>
     </div>

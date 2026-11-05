@@ -6,7 +6,18 @@ import {
 } from "lucide-react";
 
 type Role = "Admin" | "Manager" | "Teacher" | "Staff" | "Cashier";
-type Module = "Dashboard" | "School Profile" | "Academic Year" | "Departments" | "Classes" | "Sections" | "Subjects" | "Users & Roles";
+type Module =
+  | "Dashboard" | "Reports"
+  | "School Profile" | "Academic Year" | "Departments"
+  | "Classes" | "Sections" | "Subjects"
+  | "Students" | "Parents" | "Teachers" | "Staff" | "Drivers"
+  | "Student Attendance" | "Teacher Attendance" | "Staff Attendance"
+  | "Fee Structure" | "Fee Collection" | "Pending Fees" | "Receipts"
+  | "Exam Schedule" | "Marks Entry" | "Grades" | "Results" | "Report Cards"
+  | "Vehicles" | "Routes" | "Stops" | "Assignments"
+  | "Notices" | "Notifications"
+  | "Users & Roles" | "Permissions" | "Audit Logs"
+  | "Connections" | "Backups" | "Data Import";
 
 const school = {
   name: "Smart Valley Matriculation Higher Secondary School",
@@ -18,11 +29,26 @@ const school = {
 const roles: Role[] = ["Admin", "Manager", "Teacher", "Staff", "Cashier"];
 
 const permissions: Record<Role, string[]> = {
-  Admin: ["Dashboard","School Profile","Academic Year","Departments","Classes","Sections","Subjects","Users & Roles"],
-  Manager: ["Dashboard","School Profile","Academic Year","Departments","Classes","Sections","Subjects"],
-  Teacher: ["Dashboard","Classes","Sections","Subjects"],
-  Staff: ["Dashboard"],
-  Cashier: ["Dashboard"],
+  Admin: [
+    "Dashboard","Reports","School Profile","Academic Year","Departments",
+    "Classes","Sections","Subjects","Students","Parents","Teachers","Staff","Drivers",
+    "Student Attendance","Teacher Attendance","Staff Attendance",
+    "Fee Structure","Fee Collection","Pending Fees","Receipts",
+    "Exam Schedule","Marks Entry","Grades","Results","Report Cards",
+    "Vehicles","Routes","Stops","Assignments","Notices","Notifications",
+    "Users & Roles","Permissions","Audit Logs","Connections","Backups","Data Import"
+  ],
+  Manager: [
+    "Dashboard","Reports","School Profile","Academic Year","Departments",
+    "Classes","Sections","Subjects","Students","Parents","Teachers","Staff","Drivers",
+    "Student Attendance","Teacher Attendance","Staff Attendance",
+    "Fee Structure","Fee Collection","Pending Fees","Receipts",
+    "Exam Schedule","Marks Entry","Grades","Results","Report Cards",
+    "Vehicles","Routes","Stops","Assignments","Notices","Notifications"
+  ],
+  Teacher: ["Dashboard","Classes","Sections","Subjects","Students","Student Attendance","Teacher Attendance","Exam Schedule","Marks Entry","Grades","Results","Report Cards","Notices"],
+  Staff: ["Dashboard","Students","Staff Attendance","Notices"],
+  Cashier: ["Dashboard","Fee Structure","Fee Collection","Pending Fees","Receipts","Reports"],
 };
 
 const demo = {
@@ -46,12 +72,30 @@ export default function Phase1() {
     }
   };
 
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({
+    Overview: true,
+    Academic: true
+  });
+
   const navGroups = [
-    { title: "MAIN", items: [["Dashboard", LayoutDashboard] as const] },
-    { title: "SCHOOL", items: [["School Profile", School],["Academic Year", CalendarDays],["Departments", Building2]] as const },
-    { title: "ACADEMIC", items: [["Classes", GraduationCap],["Sections", Layers3],["Subjects", BookOpen]] as const },
-    { title: "ADMINISTRATION", items: [["Users & Roles", ShieldCheck],["Settings", Settings]] as const },
-  ];
+    { title: "Overview", icon: LayoutDashboard, items: [["Dashboard", LayoutDashboard]] },
+    { title: "Reports", icon: BookMarked, items: [["Reports", BookMarked]] },
+    { title: "School", icon: School, items: [["School Profile", School], ["Academic Year", CalendarDays], ["Departments", Building2]] },
+    { title: "Academic", icon: GraduationCap, items: [["Classes", GraduationCap], ["Sections", Layers3], ["Subjects", BookOpen]] },
+    { title: "People", icon: Users, items: [["Students", GraduationCap], ["Parents", Users], ["Teachers", UserCog], ["Staff", UserCog], ["Drivers", Users]] },
+    { title: "Attendance", icon: CalendarDays, items: [["Student Attendance", CalendarDays], ["Teacher Attendance", UserCog], ["Staff Attendance", Users]] },
+    { title: "Fees", icon: Building2, items: [["Fee Structure", Building2], ["Fee Collection", Building2], ["Pending Fees", CalendarDays], ["Receipts", BookMarked]] },
+    { title: "Examination", icon: BookOpen, items: [["Exam Schedule", CalendarDays], ["Marks Entry", BookOpen], ["Grades", BookMarked], ["Results", GraduationCap], ["Report Cards", BookMarked]] },
+    { title: "Transport", icon: School, items: [["Vehicles", School], ["Routes", Building2], ["Stops", School], ["Assignments", Users]] },
+    { title: "Announcement", icon: Bell, items: [["Notices", Bell], ["Notifications", Bell]] },
+    { title: "Administration", icon: ShieldCheck, items: [["Users & Roles", ShieldCheck], ["Permissions", ShieldCheck], ["Audit Logs", BookMarked]] },
+  ] as const;
+
+  const settingsItems = [
+    ["Connections", Building2],
+    ["Backups", BookMarked],
+    ["Data Import", Plus],
+  ] as const;
 
   return (
     <div className="p1-shell">
@@ -67,26 +111,72 @@ export default function Phase1() {
           <div><strong>{school.name}</strong><span>{school.id}</span></div>
         </div>
 
-        <nav>
-          {navGroups.map(g => (
-            <div className="p1-nav-group" key={g.title}>
-              <small>{g.title}</small>
-              {g.items.map(([label, Icon]) => (
+        <nav className="p1-navigation">
+          {navGroups.map(g => {
+            const ParentIcon = g.icon;
+            const isOpen = !!expanded[g.title];
+            const isActive = g.items.some(([label]) => module === label);
+            return (
+              <div className="p1-nav-group" key={g.title}>
                 <button
-                  key={label}
-                  className={module === label ? "active" : ""}
-                  disabled={!allowed.includes(label as Module) && label !== "Settings"}
-                  onClick={() => label === "Settings" ? setModule("School Profile") : navigate(label as Module)}
+                  className={`p1-nav-parent ${isActive ? "parent-active" : ""}`}
+                  onClick={() => setExpanded(v => ({ ...v, [g.title]: !v[g.title] }))}
+                  aria-expanded={isOpen}
                 >
-                  <Icon size={18}/><span>{label}</span>
+                  <ParentIcon size={17}/>
+                  <span>{g.title}</span>
+                  <ChevronDown className={`p1-chevron ${isOpen ? "rotated" : ""}`} size={15}/>
                 </button>
-              ))}
-            </div>
-          ))}
+
+                {isOpen && (
+                  <div className="p1-nav-children">
+                    {g.items.map(([label, Icon]) => (
+                      <button
+                        key={label}
+                        className={module === label ? "active" : ""}
+                        disabled={!allowed.includes(label as Module)}
+                        onClick={() => navigate(label as Module)}
+                      >
+                        <Icon size={15}/>
+                        <span>{label}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </nav>
 
         <div className="p1-sidebar-bottom">
-          <button onClick={() => window.location.href="/"}><LogOut size={18}/> Exit SSOS</button>
+          <button
+            className="p1-nav-parent p1-settings-parent"
+            onClick={() => setExpanded(v => ({ ...v, Settings: !v.Settings }))}
+            aria-expanded={!!expanded.Settings}
+          >
+            <Settings size={18}/>
+            <span>Settings</span>
+            <ChevronDown className={`p1-chevron ${expanded.Settings ? "rotated" : ""}`} size={15}/>
+          </button>
+
+          {expanded.Settings && (
+            <div className="p1-nav-children p1-settings-children">
+              {settingsItems.map(([label, Icon]) => (
+                <button
+                  key={label}
+                  className={module === label ? "active" : ""}
+                  disabled={!allowed.includes(label as Module)}
+                  onClick={() => navigate(label as Module)}
+                >
+                  <Icon size={15}/><span>{label}</span>
+                </button>
+              ))}
+            </div>
+          )}
+
+          <button className="p1-exit" onClick={() => window.location.href="/"}>
+            <LogOut size={17}/> Exit SSOS
+          </button>
         </div>
       </aside>
 
