@@ -13,14 +13,14 @@ type Item = { name: string; icon: typeof School; children?: string[] };
 
 const navigation: Item[] = [
   { name: "Dashboard", icon: LayoutDashboard, children: ["Overview"] },
-  { name: "Reports", icon: ChartNoAxesCombined, children: ["School Reports", "Attendance Reports", "Fee Reports", "Academic Reports"] },
+  { name: "Reports", icon: ChartNoAxesCombined, children: ["Overall Reports", "Academic Reports", "Attendance Reports", "Fee Reports"] },
   { name: "School", icon: School, children: ["School Profile", "Academic Year", "Departments"] },
   { name: "Academic", icon: BookOpen, children: ["Classes / Standards", "Sections", "Subjects"] },
-  { name: "Peoples", icon: Users, children: ["Students", "Parents", "Teachers", "Staff", "Drivers"] },
+  { name: "People", icon: Users, children: ["Students", "Parents", "Teachers", "Staff", "Drivers"] },
   { name: "Attendance", icon: CalendarCheck, children: ["Student Attendance", "Teacher Attendance", "Staff Attendance"] },
   { name: "Fees", icon: Wallet, children: ["Fee Structure", "Fee Collection", "Fees Pending", "Receipts"] },
-  { name: "Examination", icon: GraduationCap, children: ["Exam Schedule", "Marks Entry", "Results", "Result Card"] },
-  { name: "Transport", icon: Bus, children: ["Buses", "Drivers", "Routes", "Stops"] },
+  { name: "Examination", icon: GraduationCap, children: ["Exam Schedule", "Marks Entry", "Grades", "Results", "Result Card"] },
+  { name: "Transport", icon: Bus, children: ["Buses", "Drivers", "Routes", "Stops", "Assignments"] },
   { name: "Announcement", icon: Bell, children: ["Announcements", "Notifications"] },
   { name: "Administration", icon: ShieldCheck, children: ["Users & Roles", "Permissions", "Audit Logs"] }
 ];
